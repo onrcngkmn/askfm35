@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Atatürk Müzik ve Chat</title>
 <style>
-  /* Temel ayarlar */
   html, body {
     margin: 0; padding: 0; height: 100%;
     font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
@@ -15,7 +14,6 @@
     color: white;
   }
 
-  /* Arka plan slayt */
   #bg-slide {
     position: fixed;
     top:0; left:0; width:100%; height:100%;
@@ -23,14 +21,28 @@
     z-index: -3;
   }
 
-  /* Saydam tarih saat */
+  /* Üst orta bilgi yazısı */
+  #info-text {
+    position: fixed;
+    top: 15px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0,0,0,0.5);
+    padding: 8px 20px;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: bold;
+    z-index: 12;
+  }
+
+  /* Tarih saat sol alt */
   #date-time {
     position: fixed;
-    top: 12px;
-    right: 20px;
+    bottom: 10px;
+    left: 10px;
     color: rgba(255,255,255,0.7);
     font-weight: 600;
-    font-size: 16px;
+    font-size: 14px;
     background: rgba(0,0,0,0.3);
     padding: 6px 12px;
     border-radius: 12px;
@@ -38,20 +50,19 @@
     z-index: 10;
   }
 
-  /* Sosyal logolar sağ orta, alt alta */
+  /* Sosyal logolar sağ alt */
   .social {
     position: fixed;
-    top: 50%;
+    bottom: 10px;
     right: 15px;
-    transform: translateY(-50%);
     display: flex;
-    flex-direction: column;
-    gap: 25px;
+    flex-direction: row;
+    gap: 20px;
     z-index: 10;
   }
   .social a img {
-    width: 45px;
-    height: 45px;
+    width: 40px;
+    height: 40px;
     filter: drop-shadow(0 0 6px #fff);
     transition: transform 0.3s ease;
   }
@@ -59,7 +70,6 @@
     transform: scale(1.2);
   }
 
-  /* Ekolayzır alt orta */
   #equalizer {
     position: fixed;
     bottom: 10px;
@@ -88,55 +98,6 @@
     opacity: 0.7;
   }
 
-  /* Sol altta müzik başlatma uyarısı */
-  #start-music-msg {
-    position: fixed;
-    bottom: 10px;
-    left: 10px;
-    font-size: 13px;
-    color: rgba(255, 255, 255, 0.5);
-    user-select: none;
-    font-weight: 500;
-    z-index: 15;
-    pointer-events: none;
-    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-  }
-
-  /* Animasyonlu kayan mesaj bildirimleri */
-  #notifications-container {
-    position: fixed;
-    top: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 350px;
-    pointer-events: none;
-    z-index: 20;
-  }
-  .notification {
-    background: rgba(0, 212, 255, 0.4);
-    color: white;
-    padding: 8px 14px;
-    margin-bottom: 8px;
-    border-radius: 12px;
-    font-weight: 600;
-    font-size: 14px;
-    text-align: center;
-    animation: slideDownFade 4s forwards;
-    user-select: none;
-  }
-
-  @keyframes slideDownFade {
-    0% {
-      opacity: 1;
-      transform: translateY(0);
-    }
-    100% {
-      opacity: 0;
-      transform: translateY(120px);
-    }
-  }
-
-  /* Sol orta logo container */
   #logo-container {
     position: fixed;
     left: 10px;
@@ -146,12 +107,10 @@
     gap: 20px;
     z-index: 15;
   }
-
-  /* Logo butonlar */
   .logo-button {
     width: 60px;
     height: 60px;
-    border-radius: 15px; /* Yuvarlak kenar, biraz daha modern */
+    border-radius: 15px;
     overflow: hidden;
     cursor: pointer;
     border: 2px solid rgba(255,255,255,0.6);
@@ -159,12 +118,10 @@
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     background-color: #111;
   }
-
   .logo-button:hover {
     transform: scale(1.1);
     box-shadow: 0 0 18px #00ffff;
   }
-
   .logo-button img {
     width: 100%;
     height: 100%;
@@ -177,9 +134,7 @@
 
 <div id="bg-slide"></div>
 
-<div id="notifications-container"></div>
-
-<div id="start-music-msg">Müziği başlatmak istiyorsan ekrana 1 kere tıkla</div>
+<div id="info-text">Dinlemek istediğin sanatçının resmine tıkla</div>
 
 <div id="date-time"></div>
 
@@ -192,7 +147,6 @@
   </a>
 </div>
 
-<!-- LOGOLAR -->
 <div id="logo-container" aria-label="Müzik Logoları">
   <div id="ali-logo" class="logo-button" title="Ali Kınık">
     <img src="https://raw.githubusercontent.com/onrcngkmn/askfm35/main/alikinik.jpg" alt="Ali Kınık" />
@@ -213,7 +167,6 @@
 <audio id="audio" src="sezen.mp3" autoplay></audio>
 
 <script>
-  // Tarih ve saat
   const dateTimeEl = document.getElementById('date-time');
   function updateDateTime() {
     const now = new Date();
@@ -226,11 +179,10 @@
   setInterval(updateDateTime, 1000);
   updateDateTime();
 
-  // Ekolayzır animasyonu
   const audio = document.getElementById('audio');
   const bars = document.querySelectorAll('.bar');
   const colors = ['#00d4ff', '#009688', '#ff5722', '#ffeb3b', '#ff4081', '#673ab7'];
-  
+
   const AudioContext = window.AudioContext || window.webkitAudioContext;
   const audioCtx = new AudioContext();
   const analyser = audioCtx.createAnalyser();
@@ -248,7 +200,6 @@
     bars.forEach((bar, i) => {
       const height = (dataArray[i] / 255) * 100 + 10;
       bar.style.height = `${height}px`;
-      // renk saydamlığı
       const colorIndex = (i + Math.floor(Date.now()/500)) % colors.length;
       bar.style.background = colors[colorIndex];
       bar.style.opacity = 0.6;
@@ -256,7 +207,6 @@
     });
   }
 
-  // Otomatik oynatmaya kullanıcı etkileşimi ile izin
   window.addEventListener('click', () => {
     if (audioCtx.state === 'suspended') {
       audioCtx.resume();
@@ -264,7 +214,6 @@
     }
   }, {once:true});
 
-  // Otomatik başlatmaya çalış (tarayıcı engellerse sessiz kalacak)
   window.onload = () => {
     audioCtx.resume().then(() => {
       audio.play().catch(() => {});
@@ -273,21 +222,16 @@
 
   animateBars();
 
-  // LOGO BUTONLARI MÜZİK ÇALMA
   const aliLogo = document.getElementById('ali-logo');
   const sezenLogo = document.getElementById('sezen-logo');
 
   aliLogo.addEventListener('click', () => {
-    if (!audio.src.includes('sezen.mp3')) {
-      audio.src = 'sezen.mp3';
-    }
+    audio.src = 'sezen.mp3';
     audio.play();
   });
 
   sezenLogo.addEventListener('click', () => {
-    if (!audio.src.includes('sezenim.mp3')) {
-      audio.src = 'sezenim.mp3';
-    }
+    audio.src = 'sezenim.mp3';
     audio.play();
   });
 </script>
