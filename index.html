@@ -17,6 +17,24 @@
             font-family: Arial, sans-serif;
         }
 
+        #flag-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('https://upload.wikimedia.org/wikipedia/commons/thumb/b/b4/Flag_of_Turkey.svg/2560px-Flag_of_Turkey.svg.png') no-repeat center center/cover;
+            animation: wave-bg 6s infinite ease-in-out;
+            z-index: -3;
+            opacity: 0.3;
+        }
+
+        @keyframes wave-bg {
+            0% { transform: scale(1) translateY(0); }
+            50% { transform: scale(1.05) translateY(10px); }
+            100% { transform: scale(1) translateY(0); }
+        }
+
         #background {
             position: fixed;
             top: 0;
@@ -91,24 +109,6 @@
             box-shadow: 0 0 25px rgba(255,255,255,0.9);
         }
 
-        .flag-container {
-            position: absolute;
-            top: -80px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 100px;
-            animation: wave 2s infinite ease-in-out;
-        }
-        .flag-container img {
-            width: 100px;
-            height: auto;
-        }
-        @keyframes wave {
-            0% { transform: translateX(-50%) rotate(0deg) scale(1); }
-            50% { transform: translateX(-50%) rotate(3deg) scale(1.05); }
-            100% { transform: translateX(-50%) rotate(0deg) scale(1); }
-        }
-
         .social {
             position: fixed;
             bottom: 20px;
@@ -140,6 +140,7 @@
     </style>
 </head>
 <body>
+    <div id="flag-background"></div>
     <div id="background"></div>
 
     <div class="equalizer" id="equalizer">
@@ -162,9 +163,6 @@
     </div>
 
     <div class="player">
-        <div class="flag-container">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b4/Flag_of_Turkey.svg/2560px-Flag_of_Turkey.svg.png" alt="Bayrak">
-        </div>
         <h2>Müzik Çalar</h2>
         <audio id="audio" src="sezen.mp3"></audio>
         <div class="controls">
