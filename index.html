@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Atatürk Müzik ve Chat</title>
+<title>YAŞA MUSTAFA KEMAL PAŞA</title>
 <style>
   html, body {
     margin: 0; padding: 0; height: 100%;
@@ -21,7 +21,6 @@
     z-index: -3;
   }
 
-  /* Üst orta bilgi yazısı */
   #info-text {
     position: fixed;
     top: 15px;
@@ -35,7 +34,6 @@
     z-index: 12;
   }
 
-  /* Tarih saat sol alt */
   #date-time {
     position: fixed;
     bottom: 10px;
@@ -50,7 +48,6 @@
     z-index: 10;
   }
 
-  /* Sosyal logolar sağ alt */
   .social {
     position: fixed;
     bottom: 10px;
@@ -104,8 +101,10 @@
     top: 50%;
     transform: translateY(-50%);
     display: flex;
-    gap: 20px;
+    gap: 15px;
     z-index: 15;
+    flex-wrap: wrap;
+    width: 90%;
   }
   .logo-button {
     width: 60px;
@@ -138,33 +137,47 @@
 
 <div id="date-time"></div>
 
-<div class="social" aria-label="Sosyal medya">
-  <a href="https://www.facebook.com/onrcngkmn" target="_blank" rel="noopener" title="Facebook">
+<div class="social">
+  <a href="https://www.facebook.com/onrcngkmn" target="_blank" title="Facebook">
     <img src="https://cdn-icons-png.flaticon.com/512/733/733547.png" alt="Facebook" />
   </a>
-  <a href="https://www.instagram.com/onrcngkmn" target="_blank" rel="noopener" title="Instagram">
+  <a href="https://www.instagram.com/onrcngkmn" target="_blank" title="Instagram">
     <img src="https://cdn-icons-png.flaticon.com/512/2111/2111463.png" alt="Instagram" />
   </a>
 </div>
 
-<div id="logo-container" aria-label="Müzik Logoları">
-  <div id="ali-logo" class="logo-button" title="Ali Kınık">
+<div id="logo-container">
+  <div class="logo-button" data-mp3="sezen.mp3" title="Ali Kınık">
     <img src="https://raw.githubusercontent.com/onrcngkmn/askfm35/main/alikinik.jpg" alt="Ali Kınık" />
   </div>
-  <div id="sezen-logo" class="logo-button" title="Sezen Aksu">
+  <div class="logo-button" data-mp3="sezenim.mp3" title="Sezen Aksu">
     <img src="https://raw.githubusercontent.com/onrcngkmn/askfm35/main/sezenaksu.jpg" alt="Sezen Aksu" />
+  </div>
+  <div class="logo-button" data-mp3="linet.mp3" title="Linet">
+    <img src="https://raw.githubusercontent.com/onrcngkmn/askfm35/main/linet.jpg" alt="Linet" />
+  </div>
+  <div class="logo-button" data-mp3="gurses.mp3" title="Müslüm Gürses">
+    <img src="https://raw.githubusercontent.com/onrcngkmn/askfm35/main/mslmgrss.jpg" alt="Müslüm Gürses" />
+  </div>
+  <div class="logo-button" data-mp3="niran.mp3" title="Niran Ünsal">
+    <img src="https://raw.githubusercontent.com/onrcngkmn/askfm35/main/niranunsal.jpg" alt="Niran Ünsal" />
+  </div>
+  <div class="logo-button" data-mp3="haktan.mp3" title="Haktan">
+    <img src="https://raw.githubusercontent.com/onrcngkmn/askfm35/main/haktan.jpg" alt="Haktan" />
+  </div>
+  <div class="logo-button" data-mp3="yildiz.mp3" title="Yıldız Tilbe">
+    <img src="https://raw.githubusercontent.com/onrcngkmn/askfm35/main/yildiztilbe.jpg" alt="Yıldız Tilbe" />
   </div>
 </div>
 
-<div id="equalizer" aria-label="Ekolayzır">
-  <!-- 20 bar -->
+<div id="equalizer">
   <div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>
   <div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>
   <div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>
   <div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>
 </div>
 
-<audio id="audio" src="sezen.mp3" autoplay></audio>
+<audio id="audio" src=""></audio>
 
 <script>
   const dateTimeEl = document.getElementById('date-time');
@@ -210,30 +223,19 @@
   window.addEventListener('click', () => {
     if (audioCtx.state === 'suspended') {
       audioCtx.resume();
-      audio.play();
     }
   }, {once:true});
 
-  window.onload = () => {
-    audioCtx.resume().then(() => {
-      audio.play().catch(() => {});
-    });
-  };
-
   animateBars();
 
-  const aliLogo = document.getElementById('ali-logo');
-  const sezenLogo = document.getElementById('sezen-logo');
-
-  aliLogo.addEventListener('click', () => {
-    audio.src = 'sezen.mp3';
-    audio.play();
-  });
-
-  sezenLogo.addEventListener('click', () => {
-    audio.src = 'sezenim.mp3';
-    audio.play();
+  document.querySelectorAll('.logo-button').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const mp3 = btn.getAttribute('data-mp3');
+      audio.src = mp3;
+      audio.play();
+    });
   });
 </script>
+
 </body>
 </html>
