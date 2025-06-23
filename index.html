@@ -3,137 +3,266 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Televizyon Müzik Çalar</title>
+<title>Atatürk Müzik ve Chat</title>
 <style>
-  /* Genel body ayarları */
-  body, html {
+  /* Temel ayarlar */
+  html, body {
     margin: 0; padding: 0; height: 100%;
-    background: #222;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    background: black;
+    overflow: hidden;
+    color: white;
+  }
+
+  /* Arka plan slayt */
+  #bg-slide {
+    position: fixed;
+    top:0; left:0; width:100%; height:100%;
+    background-size: cover;
+    background-position: center;
+    filter: brightness(0.4);
+    transition: background-image 1.5s ease-in-out;
+    z-index: -3;
+  }
+
+  /* Saydam tarih saat */
+  #date-time {
+    position: fixed;
+    top: 12px;
+    right: 20px;
+    color: rgba(255,255,255,0.7);
+    font-weight: 600;
+    font-size: 16px;
+    background: rgba(0,0,0,0.3);
+    padding: 6px 12px;
+    border-radius: 12px;
     user-select: none;
-    overflow: hidden;
+    z-index: 10;
   }
 
-  /* TV Çerçevesi */
-  .tv {
-    position: relative;
-    width: 900px;
-    height: 600px;
-    background: linear-gradient(135deg, #111 0%, #222 40%, #222 60%, #111 100%);
-    border-radius: 30px;
-    box-shadow:
-      inset 0 0 50px #000,
-      0 10px 30px rgba(0,0,0,0.9);
-  }
-  
-  /* TV Ekran */
-  .screen {
-    position: absolute;
-    top: 35px; left: 35px; right: 35px; bottom: 110px;
-    background: linear-gradient(145deg, #0f1117, #1a1c26);
-    border-radius: 20px;
-    box-shadow:
-      inset 0 0 80px #0f4c75,
-      0 0 40px #107dacaa;
-    overflow: hidden;
+  /* Sosyal logolar sağ orta, alt alta */
+  .social {
+    position: fixed;
+    top: 50%;
+    right: 15px;
+    transform: translateY(-50%);
     display: flex;
-    align-items: flex-end;
-    justify-content: center;
-    padding-bottom: 40px;
+    flex-direction: column;
+    gap: 25px;
+    z-index: 10;
+  }
+  .social a img {
+    width: 45px;
+    height: 45px;
+    filter: drop-shadow(0 0 6px #fff);
+    transition: transform 0.3s ease;
+  }
+  .social a img:hover {
+    transform: scale(1.2);
   }
 
-  /* Ekolayzır kutusu */
-  .equalizer {
+  /* Ekolayzır alt orta */
+  #equalizer {
+    position: fixed;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
     width: 90%;
-    height: 140px;
+    max-width: 900px;
+    height: 120px;
     display: flex;
     justify-content: space-between;
     align-items: flex-end;
     gap: 6px;
+    background: rgba(0,0,0,0.15);
+    border-radius: 20px;
+    box-shadow: 0 0 25px rgba(0,212,255,0.4);
+    z-index: 9;
   }
-
-  /* Ekolayzır çubukları */
   .bar {
     flex: 1;
+    margin: 0 1px;
     background: linear-gradient(180deg, #00d4ff, #005f73);
     border-radius: 8px 8px 0 0;
     box-shadow: 0 0 8px #00eaff;
     height: 20px;
     transition: height 0.2s ease;
+    opacity: 0.7;
   }
 
-  /* Alt panel (teyp tuşları) */
-  .tv-controls {
-    position: absolute;
-    bottom: 20px;
-    left: 35px;
-    right: 35px;
-    height: 70px;
-    background: linear-gradient(135deg, #000, #222);
+  /* Chat kutusu ortada */
+  #chat-container {
+    position: fixed;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 380px;
+    max-height: 400px;
+    background: rgba(0,0,0,0.45);
     border-radius: 15px;
-    box-shadow: inset 0 0 15px #00d4ffaa;
+    box-shadow: 0 0 20px rgba(0,212,255,0.7);
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    z-index: 10;
+  }
+  #chat-header {
+    padding: 12px;
+    font-weight: 700;
+    font-size: 20px;
+    color: #00d4ff;
+    border-bottom: 1px solid rgba(0,212,255,0.4);
+  }
+  #chat-messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 10px 15px;
+    color: #eef7fb;
+    font-size: 14px;
+  }
+  .message {
+    margin-bottom: 10px;
+    word-wrap: break-word;
+  }
+  .username {
+    font-weight: 600;
+    color: #00a1cc;
+    margin-right: 6px;
+  }
+  #chat-input-area {
+    display: flex;
     align-items: center;
-    gap: 30px;
+    padding: 10px 15px;
+    gap: 8px;
+    border-top: 1px solid rgba(0,212,255,0.4);
   }
-
-  /* Butonlar */
-  button {
-    width: 70px;
-    height: 70px;
-    border-radius: 50%;
+  #chat-input {
+    flex: 1;
+    padding: 8px 12px;
+    border-radius: 12px;
     border: none;
-    background: linear-gradient(145deg, #004d61, #007ea7);
-    box-shadow: 0 0 20px #00d4ff;
-    color: #e0f7fa;
-    font-size: 32px;
-    cursor: pointer;
-    transition: background 0.3s ease, transform 0.15s ease;
+    font-size: 15px;
   }
-  button:hover {
-    background: linear-gradient(145deg, #00c8ff, #00d4ff);
-    transform: scale(1.15);
-    box-shadow: 0 0 30px #00f0ff;
+  #chat-input:focus {
+    outline: none;
+  }
+  #send-btn {
+    background: #00d4ff;
+    border: none;
+    padding: 9px 14px;
+    border-radius: 12px;
+    cursor: pointer;
+    color: black;
+    font-weight: 700;
+    font-size: 16px;
+    transition: background 0.3s ease;
+  }
+  #send-btn:hover {
+    background: #008ecf;
+    color: white;
+  }
+  #emoji-btn {
+    background: transparent;
+    border: none;
+    font-size: 26px;
+    cursor: pointer;
+    color: #00d4ff;
+  }
+  #emoji-picker {
+    position: absolute;
+    bottom: 65px;
+    right: 15px;
+    background: rgba(0,0,0,0.8);
+    border-radius: 12px;
+    padding: 10px;
+    display: none;
+    flex-wrap: wrap;
+    max-width: 200px;
+    z-index: 15;
+  }
+  #emoji-picker span {
+    font-size: 24px;
+    padding: 5px 8px;
+    cursor: pointer;
+    user-select: none;
+  }
+  #emoji-picker span:hover {
+    background: #008ecf;
+    border-radius: 8px;
   }
 </style>
 </head>
 <body>
 
-<div class="tv" role="region" aria-label="Televizyon Müzik Çalar">
-  <div class="screen" aria-live="polite" aria-atomic="true" aria-label="Ekolayzır ekranı">
-    <div class="equalizer" id="equalizer">
-      <!-- 20 bar -->
-      <div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>
-      <div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>
-      <div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>
-      <div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>
-    </div>
-  </div>
+<div id="bg-slide"></div>
 
-  <div class="tv-controls" role="region" aria-label="Müzik kontrol tuşları">
-    <button id="play-pause" aria-label="Oynat / Duraklat">▶</button>
-    <button id="mute" aria-label="Sessiz Aç / Kapa">🔊</button>
-    <button id="volume-down" aria-label="Sesi Kıs">-</button>
-    <button id="volume-up" aria-label="Sesi Aç">+</button>
+<div id="date-time"></div>
+
+<div class="social" aria-label="Sosyal medya">
+  <a href="https://www.facebook.com/onrcngkmn" target="_blank" rel="noopener" title="Facebook">
+    <img src="https://cdn-icons-png.flaticon.com/512/733/733547.png" alt="Facebook" />
+  </a>
+  <a href="https://www.instagram.com/onrcngkmn" target="_blank" rel="noopener" title="Instagram">
+    <img src="https://cdn-icons-png.flaticon.com/512/2111/2111463.png" alt="Instagram" />
+  </a>
+</div>
+
+<div id="equalizer" aria-label="Ekolayzır">
+  <!-- 20 bar -->
+  <div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>
+  <div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>
+  <div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>
+  <div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>
+</div>
+
+<div id="chat-container" role="region" aria-label="Kullanıcı sohbet alanı">
+  <div id="chat-header">Chat - Kullanıcı: <span id="username"></span></div>
+  <div id="chat-messages"></div>
+  <div id="chat-input-area">
+    <button id="emoji-btn" aria-label="Emoji seçici aç">😊</button>
+    <input type="text" id="chat-input" placeholder="Mesajınızı yazın..." autocomplete="off" aria-label="Mesaj girişi" />
+    <button id="send-btn" aria-label="Mesaj gönder">Gönder</button>
+  </div>
+  <div id="emoji-picker" role="listbox" aria-label="Emoji seçici">
+    <span>😀</span><span>😂</span><span>😅</span><span>😍</span><span>😎</span><span>😭</span><span>👍</span><span>🙏</span><span>🎉</span><span>🔥</span>
   </div>
 </div>
 
-<audio id="audio" src="sezen.mp3"></audio>
+<audio id="audio" src="sezen.mp3" autoplay></audio>
 
 <script>
-  const audio = document.getElementById('audio');
-  const playPauseBtn = document.getElementById('play-pause');
-  const muteBtn = document.getElementById('mute');
-  const volUpBtn = document.getElementById('volume-up');
-  const volDownBtn = document.getElementById('volume-down');
-  const bars = document.querySelectorAll('.bar');
-  let isPlaying = false;
+  // Arka plan resimleri
+  const backgrounds = [
+    'ataturk1.jpg',
+    'ataturk2.jpg',
+    'ataturk3.jpg'
+  ];
+  let bgIndex = 0;
+  const bgSlide = document.getElementById('bg-slide');
 
-  // AudioContext ve analizör kurulumu
+  function changeBackground() {
+    bgSlide.style.backgroundImage = `url('${backgrounds[bgIndex]}')`;
+    bgIndex = (bgIndex + 1) % backgrounds.length;
+  }
+  changeBackground();
+  setInterval(changeBackground, 8000);
+
+  // Tarih ve saat
+  const dateTimeEl = document.getElementById('date-time');
+  function updateDateTime() {
+    const now = new Date();
+    const options = { 
+      weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',
+      hour: '2-digit', minute: '2-digit', second: '2-digit'
+    };
+    dateTimeEl.textContent = now.toLocaleDateString('tr-TR', options);
+  }
+  setInterval(updateDateTime, 1000);
+  updateDateTime();
+
+  // Ekolayzır animasyonu
+  const audio = document.getElementById('audio');
+  const bars = document.querySelectorAll('.bar');
+  const colors = ['#00d4ff', '#009688', '#ff5722', '#ffeb3b', '#ff4081', '#673ab7'];
+  
   const AudioContext = window.AudioContext || window.webkitAudioContext;
   const audioCtx = new AudioContext();
   const analyser = audioCtx.createAnalyser();
@@ -148,41 +277,60 @@
   function animateBars() {
     requestAnimationFrame(animateBars);
     analyser.getByteFrequencyData(dataArray);
-
     bars.forEach((bar, i) => {
-      const height = (dataArray[i] / 255) * 130 + 10;
+      const height = (dataArray[i] / 255) * 100 + 10;
       bar.style.height = `${height}px`;
-      bar.style.boxShadow = `0 0 15px rgba(0, 212, 255, ${dataArray[i] / 255})`;
+      // renk saydamlığı
+      const colorIndex = (i + Math.floor(Date.now()/500)) % colors.length;
+      bar.style.background = colors[colorIndex];
+      bar.style.opacity = 0.6;
+      bar.style.boxShadow = `0 0 10px ${colors[colorIndex]}aa`;
     });
   }
 
-  playPauseBtn.onclick = () => {
-    if (!isPlaying) {
+  // Otomatik oynatmaya kullanıcı etkileşimi ile izin
+  window.addEventListener('click', () => {
+    if (audioCtx.state === 'suspended') {
       audioCtx.resume();
-      audio.play();
-      animateBars();
-      isPlaying = true;
-      playPauseBtn.textContent = '⏸';
-    } else {
-      audio.pause();
-      isPlaying = false;
-      playPauseBtn.textContent = '▶';
     }
+  }, {once:true});
+
+  animateBars();
+
+  // Chat kısımları
+  const username = `user${Math.floor(Math.random() * 1000) + 1}`;
+  document.getElementById('username').textContent = username;
+
+  const chatInput = document.getElementById('chat-input');
+  const sendBtn = document.getElementById('send-btn');
+  const chatMessages = document.getElementById('chat-messages');
+  const emojiBtn = document.getElementById('emoji-btn');
+  const emojiPicker = document.getElementById('emoji-picker');
+
+  sendBtn.onclick = sendMessage;
+  chatInput.onkeydown = e => { if(e.key === 'Enter') sendMessage(); };
+
+  emojiBtn.onclick = () => {
+    emojiPicker.style.display = emojiPicker.style.display === 'flex' ? 'none' : 'flex';
   };
 
-  muteBtn.onclick = () => {
-    audio.muted = !audio.muted;
-    muteBtn.textContent = audio.muted ? '🔈' : '🔊';
-  };
+  emojiPicker.querySelectorAll('span').forEach(emoji => {
+    emoji.onclick = () => {
+      chatInput.value += emoji.textContent;
+      chatInput.focus();
+    }
+  });
 
-  volUpBtn.onclick = () => {
-    audio.volume = Math.min(audio.volume + 0.1, 1);
-  };
-
-  volDownBtn.onclick = () => {
-    audio.volume = Math.max(audio.volume - 0.1, 0);
-  };
+  function sendMessage() {
+    const text = chatInput.value.trim();
+    if(!text) return;
+    const msgDiv = document.createElement('div');
+    msgDiv.classList.add('message');
+    msgDiv.innerHTML = `<span class="username">${username}:</span> ${text}`;
+    chatMessages.appendChild(msgDiv);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+    chatInput.value = '';
+  }
 </script>
-
 </body>
 </html>
