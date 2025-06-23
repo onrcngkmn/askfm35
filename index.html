@@ -254,26 +254,18 @@
     #logo-container {
       top: 85px !important;
     }
-  }
- 
-  @media (max-width: 600px) {
-  /* Logo-container zaten top: 85px'de */
-  #logo-container {
-    top: 85px !important;
-  }
 
-  /* Chat kutusunu büyüt ve logo-container altına al */
-  #chat {
-    width: 90vw !important;      /* Ekran genişliğinin %90'ı */
-    max-width: none !important;  /* max-width sınırını kaldır */
-    max-height: 60vh !important; /* Yüksekliği viewport'un %60'ı kadar */
-    top: calc(85px + 80px);      /* logo-container top + yükseklik + boşluk */
-    transform: translate(-50%, 0) !important; /* Yatay ortala, dikey yukarı kaydırma kaldır */
-    left: 50% !important;
-    bottom: auto !important;
+    /* Chat kutusunu büyüt ve logo-container altına al */
+    #chat {
+      width: 90vw !important;      /* Ekran genişliğinin %90'ı */
+      max-width: none !important;  /* max-width sınırını kaldır */
+      max-height: 60vh !important; /* Yüksekliği viewport'un %60'ı kadar */
+      top: calc(85px + 80px);      /* logo-container top + yükseklik + boşluk */
+      transform: translate(-50%, 0) !important; /* Yatay ortala, dikey yukarı kaydırma kaldır */
+      left: 50% !important;
+      bottom: auto !important;
+    }
   }
-}
-
 </style>
 </head>
 <body>
@@ -400,7 +392,7 @@
 
   window.onload = () => {
     audioCtx.resume().then(() => {
-      audio.play().catch(() => {});
+      audio.play().catch(() => {}); 
     });
   };
 
