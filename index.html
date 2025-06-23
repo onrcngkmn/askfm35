@@ -9,7 +9,8 @@
   html, body {
     margin: 0; padding: 0; height: 100%;
     font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-    background: black;
+    background: url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1920&q=80') no-repeat center center fixed;
+    background-size: cover;
     overflow: hidden;
     color: white;
   }
@@ -18,10 +19,7 @@
   #bg-slide {
     position: fixed;
     top:0; left:0; width:100%; height:100%;
-    background-size: cover;
-    background-position: center;
-    filter: brightness(0.4);
-    transition: background-image 1.5s ease-in-out;
+    background: transparent;
     z-index: -3;
   }
 
@@ -203,14 +201,38 @@
     font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   }
 
-  /* Yağmur animasyonu için canvas */
-  #rain-canvas {
+  /* Animasyonlu kayan mesaj bildirimleri */
+  #notifications-container {
     position: fixed;
-    top: 0; left: 0;
-    width: 100vw;
-    height: 100vh;
-    pointer-events: none; /* Tıklamayı engellemesin */
-    z-index: -2; /* Arka planda, bg-slide'ın üstünde */
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 350px;
+    pointer-events: none;
+    z-index: 20;
+  }
+  .notification {
+    background: rgba(0, 212, 255, 0.4);
+    color: white;
+    padding: 8px 14px;
+    margin-bottom: 8px;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 14px;
+    text-align: center;
+    animation: slideDownFade 4s forwards;
+    user-select: none;
+  }
+
+  @keyframes slideDownFade {
+    0% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    100% {
+      opacity: 0;
+      transform: translateY(120px);
+    }
   }
 </style>
 </head>
@@ -218,7 +240,8 @@
 
 <div id="bg-slide"></div>
 
-<canvas id="rain-canvas"></canvas>
+<div id="notifications-container"></div>
+
 <div id="start-music-msg">Müziği başlatmak istiyorsan ekrana 1 kere tıkla</div>
 
 <div id="date-time"></div>
@@ -325,6 +348,7 @@
   const chatMessages = document.getElementById('chat-messages');
   const emojiBtn = document.getElementById('emoji-btn');
   const emojiPicker = document.getElementById('emoji-picker');
+  const notificationsContainer = document.getElementById('notifications-container');
 
   sendBtn.onclick = sendMessage;
   chatInput.onkeydown = e => { if(e.key === 'Enter') sendMessage(); };
@@ -343,68 +367,31 @@
   function sendMessage() {
     const text = chatInput.value.trim();
     if(!text) return;
+    // Chat mesajına ekle
     const msgDiv = document.createElement('div');
     msgDiv.classList.add('message');
     msgDiv.innerHTML = `<span class="username">${username}:</span> ${text}`;
     chatMessages.appendChild(msgDiv);
     chatMessages.scrollTop = chatMessages.scrollHeight;
+
+    // Kayan bildirim oluştur
+    createNotification(text);
+
     chatInput.value = '';
   }
 
-  // YAĞMUR ANİMASYONU KODU
-  const canvas = document.getElementById('rain-canvas');
-  const ctx = canvas.getContext('2d');
-  let width, height;
-  function resize() {
-    width = window.innerWidth;
-    height = window.innerHeight;
-    canvas.width = width;
-    canvas.height = height;
-  }
-  resize();
-  window.addEventListener('resize', resize);
+  // Bildirim animasyonu için fonksiyon
+  function createNotification(text) {
+    const notif = document.createElement('div');
+    notif.classList.add('notification');
+    notif.textContent = text;
+    notificationsContainer.appendChild(notif);
 
-  class Raindrop {
-    constructor() {
-      this.reset();
-    }
-    reset() {
-      this.x = Math.random() * width;
-      this.y = Math.random() * height;
-      this.length = 10 + Math.random() * 15;
-      this.speed = 2 + Math.random() * 3;
-      this.opacity = 0.1 + Math.random() * 0.15;
-      this.width = 1;
-    }
-    update() {
-      this.y += this.speed;
-      if(this.y > height) this.reset();
-    }
-    draw() {
-      ctx.strokeStyle = `rgba(255,255,255,${this.opacity})`;
-      ctx.lineWidth = this.width;
-      ctx.beginPath();
-      ctx.moveTo(this.x, this.y);
-      ctx.lineTo(this.x, this.y + this.length);
-      ctx.stroke();
-    }
+    // 4 saniye sonra kaldır
+    setTimeout(() => {
+      notif.remove();
+    }, 4000);
   }
-
-  const dropsCount = 200;
-  const drops = [];
-  for(let i=0; i<dropsCount; i++){
-    drops.push(new Raindrop());
-  }
-
-  function animateRain() {
-    ctx.clearRect(0, 0, width, height);
-    drops.forEach(drop => {
-      drop.update();
-      drop.draw();
-    });
-    requestAnimationFrame(animateRain);
-  }
-  animateRain();
 
 </script>
 </body>
