@@ -88,105 +88,6 @@
     opacity: 0.7;
   }
 
-  /* Chat kutusu ortada */
-  #chat-container {
-    position: fixed;
-    top: 50%; left: 50%;
-    transform: translate(-50%, -50%);
-    width: 380px;
-    max-height: 400px;
-    background: rgba(0,0,0,0.45);
-    border-radius: 15px;
-    box-shadow: 0 0 20px rgba(0,212,255,0.7);
-    display: flex;
-    flex-direction: column;
-    z-index: 10;
-  }
-  #chat-header {
-    padding: 12px;
-    font-weight: 700;
-    font-size: 20px;
-    color: #00d4ff;
-    border-bottom: 1px solid rgba(0,212,255,0.4);
-  }
-  #chat-messages {
-    flex: 1;
-    overflow-y: auto;
-    padding: 10px 15px;
-    color: #eef7fb;
-    font-size: 14px;
-  }
-  .message {
-    margin-bottom: 10px;
-    word-wrap: break-word;
-  }
-  .username {
-    font-weight: 600;
-    color: #00a1cc;
-    margin-right: 6px;
-  }
-  #chat-input-area {
-    display: flex;
-    align-items: center;
-    padding: 10px 15px;
-    gap: 8px;
-    border-top: 1px solid rgba(0,212,255,0.4);
-  }
-  #chat-input {
-    flex: 1;
-    padding: 8px 12px;
-    border-radius: 12px;
-    border: none;
-    font-size: 15px;
-  }
-  #chat-input:focus {
-    outline: none;
-  }
-  #send-btn {
-    background: #00d4ff;
-    border: none;
-    padding: 9px 14px;
-    border-radius: 12px;
-    cursor: pointer;
-    color: black;
-    font-weight: 700;
-    font-size: 16px;
-    transition: background 0.3s ease;
-  }
-  #send-btn:hover {
-    background: #008ecf;
-    color: white;
-  }
-  #emoji-btn {
-    background: transparent;
-    border: none;
-    font-size: 26px;
-    cursor: pointer;
-    color: #00d4ff;
-  }
-  #emoji-picker {
-    position: absolute;
-    bottom: 65px;
-    right: 15px;
-    background: rgba(0,0,0,0.8);
-    border-radius: 12px;
-    padding: 10px;
-    display: none;
-    flex-wrap: wrap;
-    max-width: 200px;
-    z-index: 15;
-  }
-  #emoji-picker span {
-    font-size: 24px;
-    padding: 5px 8px;
-    cursor: pointer;
-    user-select: none;
-  }
-  #emoji-picker span:hover {
-    background: #008ecf;
-    border-radius: 8px;
-  }
-
   /* Sol altta müzik başlatma uyarısı */
   #start-music-msg {
     position: fixed;
@@ -234,6 +135,39 @@
       transform: translateY(120px);
     }
   }
+
+  /* Online durum göstergesi sol üst köşe */
+  #online-status {
+    position: fixed;
+    top: 12px;
+    left: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(0,0,0,0.3);
+    padding: 6px 12px;
+    border-radius: 12px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #b9f6ca;
+    user-select: none;
+    z-index: 20;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  }
+
+  #online-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #00ff00;
+    box-shadow: 0 0 6px #00ff00;
+    animation: blink 1.5s infinite alternate;
+  }
+
+  @keyframes blink {
+    0% { opacity: 1; }
+    100% { opacity: 0.3; }
+  }
 </style>
 </head>
 <body>
@@ -243,6 +177,12 @@
 <div id="notifications-container"></div>
 
 <div id="start-music-msg">Müziği başlatmak istiyorsan ekrana 1 kere tıkla</div>
+
+<div id="online-status" aria-live="polite" aria-atomic="true">
+  <div id="online-dot" aria-hidden="true"></div>
+  <span>Online</span>
+  <span id="online-count">1</span>
+</div>
 
 <div id="date-time"></div>
 
@@ -261,19 +201,6 @@
   <div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>
   <div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>
   <div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>
-</div>
-
-<div id="chat-container" role="region" aria-label="Kullanıcı sohbet alanı">
-  <div id="chat-header">Chat - Kullanıcı: <span id="username"></span></div>
-  <div id="chat-messages"></div>
-  <div id="chat-input-area">
-    <button id="emoji-btn" aria-label="Emoji seçici aç">😊</button>
-    <input type="text" id="chat-input" placeholder="Mesajınızı yazın..." autocomplete="off" aria-label="Mesaj girişi" />
-    <button id="send-btn" aria-label="Mesaj gönder">Gönder</button>
-  </div>
-  <div id="emoji-picker" role="listbox" aria-label="Emoji seçici">
-    <span>😀</span><span>😂</span><span>😅</span><span>😍</span><span>😎</span><span>😭</span><span>👍</span><span>🙏</span><span>🎉</span><span>🔥</span>
-  </div>
 </div>
 
 <audio id="audio" src="sezen.mp3" autoplay></audio>
@@ -338,61 +265,6 @@
   };
 
   animateBars();
-
-  // Chat kısımları
-  const username = `user${Math.floor(Math.random() * 1000) + 1}`;
-  document.getElementById('username').textContent = username;
-
-  const chatInput = document.getElementById('chat-input');
-  const sendBtn = document.getElementById('send-btn');
-  const chatMessages = document.getElementById('chat-messages');
-  const emojiBtn = document.getElementById('emoji-btn');
-  const emojiPicker = document.getElementById('emoji-picker');
-  const notificationsContainer = document.getElementById('notifications-container');
-
-  sendBtn.onclick = sendMessage;
-  chatInput.onkeydown = e => { if(e.key === 'Enter') sendMessage(); };
-
-  emojiBtn.onclick = () => {
-    emojiPicker.style.display = emojiPicker.style.display === 'flex' ? 'none' : 'flex';
-  };
-
-  emojiPicker.querySelectorAll('span').forEach(emoji => {
-    emoji.onclick = () => {
-      chatInput.value += emoji.textContent;
-      chatInput.focus();
-    }
-  });
-
-  function sendMessage() {
-    const text = chatInput.value.trim();
-    if(!text) return;
-    // Chat mesajına ekle
-    const msgDiv = document.createElement('div');
-    msgDiv.classList.add('message');
-    msgDiv.innerHTML = `<span class="username">${username}:</span> ${text}`;
-    chatMessages.appendChild(msgDiv);
-    chatMessages.scrollTop = chatMessages.scrollHeight;
-
-    // Kayan bildirim oluştur
-    createNotification(text);
-
-    chatInput.value = '';
-  }
-
-  // Bildirim animasyonu için fonksiyon
-  function createNotification(text) {
-    const notif = document.createElement('div');
-    notif.classList.add('notification');
-    notif.textContent = text;
-    notificationsContainer.appendChild(notif);
-
-    // 4 saniye sonra kaldır
-    setTimeout(() => {
-      notif.remove();
-    }, 4000);
-  }
-
 </script>
 </body>
 </html>
