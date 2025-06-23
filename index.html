@@ -2,7 +2,7 @@
 <html lang="tr">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Atatürk Müzik ve Chat</title>
 <style>
   html, body {
@@ -10,10 +10,18 @@
     font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
     background: url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1920&q=80') no-repeat center center fixed;
     background-size: cover;
-    color: white;
     overflow: hidden;
+    color: white;
   }
 
+  #bg-slide {
+    position: fixed;
+    top:0; left:0; width:100%; height:100%;
+    background: transparent;
+    z-index: -3;
+  }
+
+  /* Üst orta bilgi yazısı */
   #info-text {
     position: fixed;
     top: 15px;
@@ -24,19 +32,18 @@
     border-radius: 12px;
     font-size: 16px;
     font-weight: bold;
-    z-index: 20;
+    z-index: 12;
   }
 
+  /* Sanatçı logoları - info-text altı, üst ortada yatay */
   #logo-container {
     position: fixed;
-    top: 60px;
+    top: 55px; /* info-text altına */
     left: 50%;
     transform: translateX(-50%);
     display: flex;
     gap: 15px;
-    z-index: 20;
-    flex-wrap: wrap;
-    justify-content: center;
+    z-index: 12;
   }
   .logo-button {
     width: 60px;
@@ -60,6 +67,7 @@
     pointer-events: none;
   }
 
+  /* Tarih saat sol alt */
   #date-time {
     position: fixed;
     bottom: 10px;
@@ -71,16 +79,18 @@
     padding: 6px 12px;
     border-radius: 12px;
     user-select: none;
-    z-index: 20;
+    z-index: 10;
   }
 
+  /* Sosyal logolar sağ alt */
   .social {
     position: fixed;
     bottom: 10px;
     right: 15px;
     display: flex;
+    flex-direction: row;
     gap: 20px;
-    z-index: 20;
+    z-index: 10;
   }
   .social a img {
     width: 40px;
@@ -94,7 +104,7 @@
 
   #equalizer {
     position: fixed;
-    bottom: 80px;
+    bottom: 10px;
     left: 50%;
     transform: translateX(-50%);
     width: 90%;
@@ -107,7 +117,7 @@
     background: rgba(0,0,0,0.15);
     border-radius: 20px;
     box-shadow: 0 0 25px rgba(0,212,255,0.4);
-    z-index: 15;
+    z-index: 9;
   }
   .bar {
     flex: 1;
@@ -120,21 +130,22 @@
     opacity: 0.7;
   }
 
-  /* CHAT */
+  /* Chat kutusu - tam ortada */
   #chat {
     position: fixed;
-    bottom: 10px;
-    right: 10px;
-    width: 360px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 350px;
     max-height: 500px;
-    background: rgba(0,0,0,0.75);
+    background: rgba(0,0,0,0.6);
+    color: white;
     border-radius: 15px;
-    box-shadow: 0 0 20px #00d4ffaa;
     display: flex;
     flex-direction: column;
+    z-index: 20;
     font-size: 14px;
-    color: white;
-    z-index: 25;
+    box-shadow: 0 0 20px #00d4ffaa;
   }
 
   #nicknameContainer {
@@ -145,6 +156,7 @@
     align-items: center;
     background: rgba(0,0,0,0.4);
   }
+
   #nicknameInput {
     flex: 1;
     border-radius: 12px;
@@ -174,6 +186,7 @@
     padding: 12px;
     border-bottom: 1px solid rgba(255,255,255,0.2);
   }
+
   #chatMessages div {
     margin-bottom: 8px;
     word-wrap: break-word;
@@ -185,6 +198,7 @@
     gap: 8px;
     position: relative;
   }
+
   #chatInput {
     flex: 1;
     border-radius: 12px;
@@ -193,6 +207,7 @@
     font-size: 14px;
     outline: none;
   }
+
   #chatSendBtn {
     padding: 8px 16px;
     border-radius: 12px;
@@ -203,6 +218,7 @@
     cursor: pointer;
     transition: background 0.3s ease;
   }
+
   #chatSendBtn:hover {
     background: #00b8e6;
   }
@@ -210,7 +226,7 @@
   /* Emoji Picker */
   #emojiPicker {
     display: none;
-    background: rgba(0,0,0,0.85);
+    background: rgba(0,0,0,0.8);
     padding: 10px;
     border-radius: 12px;
     max-height: 150px;
@@ -220,69 +236,52 @@
     right: 10px;
     width: 280px;
     z-index: 30;
-    user-select: none;
   }
+
   #emojiPicker span {
     font-size: 24px;
     cursor: pointer;
     margin: 5px;
+    user-select: none;
     transition: transform 0.2s ease;
   }
   #emojiPicker span:hover {
     transform: scale(1.3);
   }
-
-  /* Responsive Mobil */
-  @media (max-width: 480px) {
-    #chat {
-      width: 95vw;
-      right: 2.5vw;
-      bottom: 10px;
-      max-height: 45vh;
-    }
-    #logo-container {
-      gap: 10px;
-    }
-    .logo-button {
-      width: 50px;
-      height: 50px;
-    }
-    #equalizer {
-      height: 70px;
-      bottom: 70px;
-    }
-  }
 </style>
 </head>
 <body>
 
-<div id="info-text" role="banner">Dinlemek istediğin sanatçının resmine tıkla</div>
+<div id="bg-slide"></div>
 
+<div id="info-text">Dinlemek istediğin sanatçının resmine tıkla</div>
+
+<!-- Sanatçı logoları -->
 <div id="logo-container" aria-label="Müzik Logoları">
-  <div id="ali-logo" class="logo-button" title="Ali Kınık" role="button" tabindex="0">
+  <div id="ali-logo" class="logo-button" title="Ali Kınık">
     <img src="https://raw.githubusercontent.com/onrcngkmn/askfm35/main/alikinik.jpg" alt="Ali Kınık" />
   </div>
-  <div id="sezen-logo" class="logo-button" title="Sezen Aksu" role="button" tabindex="0">
+  <div id="sezen-logo" class="logo-button" title="Sezen Aksu">
     <img src="https://raw.githubusercontent.com/onrcngkmn/askfm35/main/sezenaksu.jpg" alt="Sezen Aksu" />
   </div>
-  <div id="linet-logo" class="logo-button" title="Linet" role="button" tabindex="0">
+  <div id="linet-logo" class="logo-button" title="Linet">
     <img src="https://raw.githubusercontent.com/onrcngkmn/askfm35/main/linet.jpg" alt="Linet" />
   </div>
-  <div id="mslmgrss-logo" class="logo-button" title="Müslüm Gürses" role="button" tabindex="0">
+  <div id="mslmgrss-logo" class="logo-button" title="Müslüm Gürses">
     <img src="https://raw.githubusercontent.com/onrcngkmn/askfm35/main/mslmgrss.jpg" alt="Müslüm Gürses" />
   </div>
-  <div id="niranunsal-logo" class="logo-button" title="Niran Ünsal" role="button" tabindex="0">
+  <div id="niranunsal-logo" class="logo-button" title="Niran Ünsal">
     <img src="https://raw.githubusercontent.com/onrcngkmn/askfm35/main/niranunsal.jpg" alt="Niran Ünsal" />
   </div>
-  <div id="haktan-logo" class="logo-button" title="Haktan" role="button" tabindex="0">
+  <div id="haktan-logo" class="logo-button" title="Haktan">
     <img src="https://raw.githubusercontent.com/onrcngkmn/askfm35/main/haktan.jpg" alt="Haktan" />
   </div>
-  <div id="yildiztilbe-logo" class="logo-button" title="Yıldız Tilbe" role="button" tabindex="0">
+  <div id="yildiztilbe-logo" class="logo-button" title="Yıldız Tilbe">
     <img src="https://raw.githubusercontent.com/onrcngkmn/askfm35/main/yildiztilbe.jpg" alt="Yıldız Tilbe" />
   </div>
 </div>
 
-<div id="date-time" role="contentinfo" aria-live="polite"></div>
+<div id="date-time"></div>
 
 <div class="social" aria-label="Sosyal medya">
   <a href="https://www.facebook.com/onrcngkmn" target="_blank" rel="noopener" title="Facebook">
@@ -294,6 +293,7 @@
 </div>
 
 <div id="equalizer" aria-label="Ekolayzır">
+  <!-- 20 bar -->
   <div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>
   <div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>
   <div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>
@@ -307,7 +307,7 @@
     <button id="setNicknameBtn" aria-label="Rumuz ayarla">Ayarla</button>
   </div>
 
-  <div id="chatMessages" aria-live="polite" aria-atomic="true" role="log"></div>
+  <div id="chatMessages" aria-live="polite" aria-atomic="true"></div>
 
   <div id="chatInputContainer">
     <button id="emojiBtn" aria-label="Emoji seçici" title="Emoji ekle" style="background:none; border:none; color:white; font-size:20px; cursor:pointer;">😊</button>
@@ -380,7 +380,7 @@
 
   animateBars();
 
-  // Logo müzik değiştirme (dosya isimleri önemli!)
+  // Logo müzik değiştirme
   const aliLogo = document.getElementById('ali-logo');
   const sezenLogo = document.getElementById('sezen-logo');
   const linetLogo = document.getElementById('linet-logo');
@@ -390,12 +390,12 @@
   const yildiztilbeLogo = document.getElementById('yildiztilbe-logo');
 
   aliLogo.addEventListener('click', () => {
-    audio.src = 'ali.mp3';
+    audio.src = 'sezen.mp3';
     audio.play();
   });
 
   sezenLogo.addEventListener('click', () => {
-    audio.src = 'sezen.mp3';
+    audio.src = 'sezenim.mp3';
     audio.play();
   });
 
@@ -405,12 +405,12 @@
   });
 
   mslmgrssLogo.addEventListener('click', () => {
-    audio.src = 'mslmgrss.mp3';
+    audio.src = 'gurses.mp3';
     audio.play();
   });
 
   niranunsalLogo.addEventListener('click', () => {
-    audio.src = 'niranunsal.mp3';
+    audio.src = 'niran.mp3';
     audio.play();
   });
 
@@ -420,7 +420,7 @@
   });
 
   yildiztilbeLogo.addEventListener('click', () => {
-    audio.src = 'yildiztilbe.mp3';
+    audio.src = 'yildiz.mp3';
     audio.play();
   });
 
@@ -498,13 +498,16 @@
     span.addEventListener('click', () => {
       chatInput.value += e;
       chatInput.focus();
-      emojiPicker.style.display = 'none';
     });
     emojiPicker.appendChild(span);
   });
 
   emojiBtn.addEventListener('click', () => {
-    emojiPicker.style.display = emojiPicker.style.display === 'block' ? 'none' : 'block';
+    if (emojiPicker.style.display === 'none') {
+      emojiPicker.style.display = 'block';
+    } else {
+      emojiPicker.style.display = 'none';
+    }
   });
 
   document.addEventListener('click', (e) => {
@@ -513,6 +516,5 @@
     }
   });
 </script>
-
 </body>
 </html>
