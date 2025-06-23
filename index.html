@@ -135,39 +135,6 @@
       transform: translateY(120px);
     }
   }
-
-  /* Online durum göstergesi sol üst köşe */
-  #online-status {
-    position: fixed;
-    top: 12px;
-    left: 12px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    background: rgba(0,0,0,0.3);
-    padding: 6px 12px;
-    border-radius: 12px;
-    font-size: 14px;
-    font-weight: 600;
-    color: #b9f6ca;
-    user-select: none;
-    z-index: 20;
-    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-  }
-
-  #online-dot {
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    background: #00ff00;
-    box-shadow: 0 0 6px #00ff00;
-    animation: blink 1.5s infinite alternate;
-  }
-
-  @keyframes blink {
-    0% { opacity: 1; }
-    100% { opacity: 0.3; }
-  }
 </style>
 </head>
 <body>
@@ -177,12 +144,6 @@
 <div id="notifications-container"></div>
 
 <div id="start-music-msg">Müziği başlatmak istiyorsan ekrana 1 kere tıkla</div>
-
-<div id="online-status" aria-live="polite" aria-atomic="true">
-  <div id="online-dot" aria-hidden="true"></div>
-  <span>Online</span>
-  <span id="online-count">1</span>
-</div>
 
 <div id="date-time"></div>
 
