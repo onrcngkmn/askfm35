@@ -35,6 +35,38 @@
     z-index: 12;
   }
 
+  /* Sanatçı logoları - info-text altı, üst ortada yatay */
+  #logo-container {
+    position: fixed;
+    top: 55px; /* info-text altına */
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 15px;
+    z-index: 12;
+  }
+  .logo-button {
+    width: 60px;
+    height: 60px;
+    border-radius: 15px;
+    overflow: hidden;
+    cursor: pointer;
+    border: 2px solid rgba(255,255,255,0.6);
+    box-shadow: 0 0 12px rgba(0,255,255,0.6);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    background-color: #111;
+  }
+  .logo-button:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 18px #00ffff;
+  }
+  .logo-button img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    pointer-events: none;
+  }
+
   /* Tarih saat sol alt */
   #date-time {
     position: fixed;
@@ -98,53 +130,54 @@
     opacity: 0.7;
   }
 
-  #logo-container {
-    position: fixed;
-    left: 10px;
-    top: 50%;
-    transform: translateY(-50%);
-    display: flex;
-    gap: 20px;
-    z-index: 15;
-  }
-  .logo-button {
-    width: 60px;
-    height: 60px;
-    border-radius: 15px;
-    overflow: hidden;
-    cursor: pointer;
-    border: 2px solid rgba(255,255,255,0.6);
-    box-shadow: 0 0 12px rgba(0,255,255,0.6);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    background-color: #111;
-  }
-  .logo-button:hover {
-    transform: scale(1.1);
-    box-shadow: 0 0 18px #00ffff;
-  }
-  .logo-button img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    pointer-events: none;
-  }
-
-  /* Chat kutusu - sağ orta */
+  /* Chat kutusu - tam ortada */
   #chat {
     position: fixed;
     top: 50%;
-    right: 10px;
-    transform: translateY(-50%);
-    width: 320px;
-    max-height: 400px;
-    background: rgba(0,0,0,0.5);
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 350px;
+    max-height: 500px;
+    background: rgba(0,0,0,0.6);
     color: white;
     border-radius: 15px;
     display: flex;
     flex-direction: column;
     z-index: 20;
     font-size: 14px;
-    box-shadow: 0 0 12px #00d4ffaa;
+    box-shadow: 0 0 20px #00d4ffaa;
+  }
+
+  #nicknameContainer {
+    padding: 10px 15px;
+    border-bottom: 1px solid rgba(255,255,255,0.3);
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    background: rgba(0,0,0,0.4);
+  }
+
+  #nicknameInput {
+    flex: 1;
+    border-radius: 12px;
+    border: none;
+    padding: 8px 12px;
+    font-size: 14px;
+    outline: none;
+    color: #000;
+  }
+  #setNicknameBtn {
+    padding: 8px 16px;
+    border-radius: 12px;
+    border: none;
+    background: #00d4ff;
+    color: #000;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+  #setNicknameBtn:hover {
+    background: #00b8e6;
   }
 
   #chatMessages {
@@ -223,17 +256,7 @@
 
 <div id="info-text">Dinlemek istediğin sanatçının resmine tıkla</div>
 
-<div id="date-time"></div>
-
-<div class="social" aria-label="Sosyal medya">
-  <a href="https://www.facebook.com/onrcngkmn" target="_blank" rel="noopener" title="Facebook">
-    <img src="https://cdn-icons-png.flaticon.com/512/733/733547.png" alt="Facebook" />
-  </a>
-  <a href="https://www.instagram.com/onrcngkmn" target="_blank" rel="noopener" title="Instagram">
-    <img src="https://cdn-icons-png.flaticon.com/512/2111/2111463.png" alt="Instagram" />
-  </a>
-</div>
-
+<!-- Sanatçı logoları -->
 <div id="logo-container" aria-label="Müzik Logoları">
   <div id="ali-logo" class="logo-button" title="Ali Kınık">
     <img src="https://raw.githubusercontent.com/onrcngkmn/askfm35/main/alikinik.jpg" alt="Ali Kınık" />
@@ -258,6 +281,17 @@
   </div>
 </div>
 
+<div id="date-time"></div>
+
+<div class="social" aria-label="Sosyal medya">
+  <a href="https://www.facebook.com/onrcngkmn" target="_blank" rel="noopener" title="Facebook">
+    <img src="https://cdn-icons-png.flaticon.com/512/733/733547.png" alt="Facebook" />
+  </a>
+  <a href="https://www.instagram.com/onrcngkmn" target="_blank" rel="noopener" title="Instagram">
+    <img src="https://cdn-icons-png.flaticon.com/512/2111/2111463.png" alt="Instagram" />
+  </a>
+</div>
+
 <div id="equalizer" aria-label="Ekolayzır">
   <!-- 20 bar -->
   <div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>
@@ -268,19 +302,25 @@
 
 <!-- CHAT ALANI -->
 <div id="chat" aria-label="Chat">
+  <div id="nicknameContainer">
+    <input id="nicknameInput" type="text" placeholder="Rumuzunuzu yazın..." aria-label="Rumuz girin" autocomplete="off" />
+    <button id="setNicknameBtn" aria-label="Rumuz ayarla">Ayarla</button>
+  </div>
+
   <div id="chatMessages" aria-live="polite" aria-atomic="true"></div>
+
   <div id="chatInputContainer">
     <button id="emojiBtn" aria-label="Emoji seçici" title="Emoji ekle" style="background:none; border:none; color:white; font-size:20px; cursor:pointer;">😊</button>
-    <input id="chatInput" type="text" placeholder="Mesajınızı yazın..." aria-label="Mesaj yaz" autocomplete="off" />
-    <button id="chatSendBtn" aria-label="Gönder">Gönder</button>
+    <input id="chatInput" type="text" placeholder="Mesajınızı yazın..." aria-label="Mesaj yaz" autocomplete="off" disabled />
+    <button id="chatSendBtn" aria-label="Gönder" disabled>Gönder</button>
   </div>
+
   <div id="emojiPicker" aria-label="Emoji seçici"></div>
 </div>
 
 <audio id="audio" src="sezen.mp3" autoplay></audio>
 
 <script src="https://cdn.socket.io/4.6.1/socket.io.min.js" crossorigin="anonymous"></script>
-
 
 <script>
   // Tarih ve saat
@@ -391,17 +431,41 @@
   const chatInput = document.getElementById('chatInput');
   const chatSendBtn = document.getElementById('chatSendBtn');
 
+  // Rumuz
+  const nicknameInput = document.getElementById('nicknameInput');
+  const setNicknameBtn = document.getElementById('setNicknameBtn');
+  let nickname = null;
+
   function addMessage(msg) {
     const msgDiv = document.createElement('div');
-    msgDiv.textContent = msg;
+    msgDiv.innerHTML = msg;
     chatMessages.appendChild(msgDiv);
     chatMessages.scrollTop = chatMessages.scrollHeight;
   }
 
+  setNicknameBtn.addEventListener('click', () => {
+    const nick = nicknameInput.value.trim();
+    if (nick.length === 0) {
+      nickname = 'Anonim';
+    } else {
+      nickname = nick;
+    }
+    nicknameInput.disabled = true;
+    setNicknameBtn.disabled = true;
+    chatInput.disabled = false;
+    chatSendBtn.disabled = false;
+    chatInput.focus();
+    addMessage(`<em>Rumuzunuz <strong>${nickname}</strong> olarak ayarlandı.</em>`);
+  });
+
   chatSendBtn.addEventListener('click', () => {
     const msg = chatInput.value.trim();
     if (!msg) return;
-    socket.emit('chat message', msg);
+    if (!nickname) {
+      alert('Lütfen önce rumuzunuzu ayarlayın.');
+      return;
+    }
+    socket.emit('chat message', `<strong>${nickname}:</strong> ${msg}`);
     chatInput.value = '';
     chatInput.focus();
   });
@@ -415,21 +479,19 @@
   });
 
   socket.on('connect', () => {
-    addMessage('Sohbete bağlandınız.');
+    addMessage('<em>Sohbete bağlandınız.</em>');
   });
 
   socket.on('disconnect', () => {
-    addMessage('Sohbet bağlantısı kesildi.');
+    addMessage('<em>Sohbet bağlantısı kesildi.</em>');
   });
 
   // Emoji Picker
   const emojiBtn = document.getElementById('emojiBtn');
   const emojiPicker = document.getElementById('emojiPicker');
 
-  // Emoji listesi
   const emojis = ['😀','😂','😅','😍','😎','😢','👍','🙏','🎵','🔥','💙','✨','🎉','🥳','💬','😜','🤔'];
 
-  // Emojileri emojiPicker içine ekle
   emojis.forEach(e => {
     const span = document.createElement('span');
     span.textContent = e;
@@ -440,7 +502,6 @@
     emojiPicker.appendChild(span);
   });
 
-  // Emoji picker görünür/gizli toggle
   emojiBtn.addEventListener('click', () => {
     if (emojiPicker.style.display === 'none') {
       emojiPicker.style.display = 'block';
@@ -449,7 +510,6 @@
     }
   });
 
-  // Emoji picker dışına tıklayınca gizle
   document.addEventListener('click', (e) => {
     if (!emojiPicker.contains(e.target) && e.target !== emojiBtn) {
       emojiPicker.style.display = 'none';
