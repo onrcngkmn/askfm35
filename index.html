@@ -94,6 +94,25 @@
             border-radius: 3px;
         }
 
+        /* Bayrak */
+        .flag-container {
+            position: absolute;
+            top: -80px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            animation: wave 2s infinite ease-in-out;
+        }
+        .flag-container img {
+            width: 100px;
+            height: auto;
+        }
+        @keyframes wave {
+            0% { transform: translateX(-50%) rotate(0deg) scale(1); }
+            50% { transform: translateX(-50%) rotate(3deg) scale(1.05); }
+            100% { transform: translateX(-50%) rotate(0deg) scale(1); }
+        }
+
         /* Sosyal medya */
         .social {
             position: fixed;
@@ -143,8 +162,11 @@
     </div>
 
     <div class="player">
+        <div class="flag-container">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b4/Flag_of_Turkey.svg/2560px-Flag_of_Turkey.svg.png" alt="Bayrak">
+        </div>
         <h2>Müzik Çalar</h2>
-        <audio id="audio" src="muzik.mp3"></audio>
+        <audio id="audio" src="sezen.mp3"></audio>
         <div class="controls">
             <button onclick="playPause()">▶ / ⏸</button>
             <button onclick="skip()">⏭</button>
