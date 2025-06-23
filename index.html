@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Müzikli Geceler :) </title>
+<title>Atatürk Müzik ve Chat</title>
 <style>
   html, body {
     margin: 0; padding: 0; height: 100%;
@@ -21,6 +21,7 @@
     z-index: -3;
   }
 
+  /* Üst orta bilgi yazısı */
   #info-text {
     position: fixed;
     top: 15px;
@@ -34,6 +35,7 @@
     z-index: 12;
   }
 
+  /* Tarih saat sol alt */
   #date-time {
     position: fixed;
     bottom: 10px;
@@ -48,6 +50,7 @@
     z-index: 10;
   }
 
+  /* Sosyal logolar sağ alt */
   .social {
     position: fixed;
     bottom: 10px;
@@ -101,10 +104,8 @@
     top: 50%;
     transform: translateY(-50%);
     display: flex;
-    gap: 15px;
+    gap: 20px;
     z-index: 15;
-    flex-wrap: wrap;
-    width: 90%;
   }
   .logo-button {
     width: 60px;
@@ -127,6 +128,66 @@
     object-fit: cover;
     pointer-events: none;
   }
+
+  /* Chat kutusu - sağ orta */
+  #chat {
+    position: fixed;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    width: 320px;
+    max-height: 400px;
+    background: rgba(0,0,0,0.5);
+    color: white;
+    border-radius: 15px;
+    display: flex;
+    flex-direction: column;
+    z-index: 20;
+    font-size: 14px;
+    box-shadow: 0 0 12px #00d4ffaa;
+  }
+
+  #chatMessages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 12px;
+    border-bottom: 1px solid rgba(255,255,255,0.2);
+  }
+
+  #chatMessages div {
+    margin-bottom: 8px;
+    word-wrap: break-word;
+  }
+
+  #chatInputContainer {
+    display: flex;
+    padding: 10px;
+    gap: 8px;
+  }
+
+  #chatInput {
+    flex: 1;
+    border-radius: 12px;
+    border: none;
+    padding: 8px 12px;
+    font-size: 14px;
+    outline: none;
+  }
+
+  #chatSendBtn {
+    padding: 8px 16px;
+    border-radius: 12px;
+    border: none;
+    background: #00d4ff;
+    color: #000;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+
+  #chatSendBtn:hover {
+    background: #00b8e6;
+  }
 </style>
 </head>
 <body>
@@ -137,49 +198,62 @@
 
 <div id="date-time"></div>
 
-<div class="social">
-  <a href="https://www.facebook.com/onrcngkmn" target="_blank" title="Facebook">
+<div class="social" aria-label="Sosyal medya">
+  <a href="https://www.facebook.com/onrcngkmn" target="_blank" rel="noopener" title="Facebook">
     <img src="https://cdn-icons-png.flaticon.com/512/733/733547.png" alt="Facebook" />
   </a>
-  <a href="https://www.instagram.com/onrcngkmn" target="_blank" title="Instagram">
+  <a href="https://www.instagram.com/onrcngkmn" target="_blank" rel="noopener" title="Instagram">
     <img src="https://cdn-icons-png.flaticon.com/512/2111/2111463.png" alt="Instagram" />
   </a>
 </div>
 
-<div id="logo-container">
-  <div class="logo-button" data-mp3="sezen.mp3" title="Ali Kınık">
+<div id="logo-container" aria-label="Müzik Logoları">
+  <div id="ali-logo" class="logo-button" title="Ali Kınık">
     <img src="https://raw.githubusercontent.com/onrcngkmn/askfm35/main/alikinik.jpg" alt="Ali Kınık" />
   </div>
-  <div class="logo-button" data-mp3="sezenim.mp3" title="Sezen Aksu">
+  <div id="sezen-logo" class="logo-button" title="Sezen Aksu">
     <img src="https://raw.githubusercontent.com/onrcngkmn/askfm35/main/sezenaksu.jpg" alt="Sezen Aksu" />
   </div>
-  <div class="logo-button" data-mp3="linet.mp3" title="Linet">
+  <div id="linet-logo" class="logo-button" title="Linet">
     <img src="https://raw.githubusercontent.com/onrcngkmn/askfm35/main/linet.jpg" alt="Linet" />
   </div>
-  <div class="logo-button" data-mp3="gurses.mp3" title="Müslüm Gürses">
+  <div id="mslmgrss-logo" class="logo-button" title="Müslüm Gürses">
     <img src="https://raw.githubusercontent.com/onrcngkmn/askfm35/main/mslmgrss.jpg" alt="Müslüm Gürses" />
   </div>
-  <div class="logo-button" data-mp3="niran.mp3" title="Niran Ünsal">
+  <div id="niranunsal-logo" class="logo-button" title="Niran Ünsal">
     <img src="https://raw.githubusercontent.com/onrcngkmn/askfm35/main/niranunsal.jpg" alt="Niran Ünsal" />
   </div>
-  <div class="logo-button" data-mp3="haktan.mp3" title="Haktan">
+  <div id="haktan-logo" class="logo-button" title="Haktan">
     <img src="https://raw.githubusercontent.com/onrcngkmn/askfm35/main/haktan.jpg" alt="Haktan" />
   </div>
-  <div class="logo-button" data-mp3="yildiz.mp3" title="Yıldız Tilbe">
+  <div id="yildiztilbe-logo" class="logo-button" title="Yıldız Tilbe">
     <img src="https://raw.githubusercontent.com/onrcngkmn/askfm35/main/yildiztilbe.jpg" alt="Yıldız Tilbe" />
   </div>
 </div>
 
-<div id="equalizer">
+<div id="equalizer" aria-label="Ekolayzır">
+  <!-- 20 bar -->
   <div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>
   <div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>
   <div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>
   <div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>
 </div>
 
-<audio id="audio" src=""></audio>
+<!-- CHAT ALANI -->
+<div id="chat" aria-label="Chat">
+  <div id="chatMessages" aria-live="polite" aria-atomic="true"></div>
+  <div id="chatInputContainer">
+    <input id="chatInput" type="text" placeholder="Mesajınızı yazın..." aria-label="Mesaj yaz" />
+    <button id="chatSendBtn" aria-label="Gönder">Gönder</button>
+  </div>
+</div>
+
+<audio id="audio" src="sezen.mp3" autoplay></audio>
+
+<script src="https://cdn.socket.io/4.6.1/socket.io.min.js" integrity="sha384-M7KUXshVJpAok9Jz/zmYeqHZ31imX4dR22pNp+CyZBxTl8h5oPiPZHG1G9kOCnEl" crossorigin="anonymous"></script>
 
 <script>
+  // Tarih ve saat
   const dateTimeEl = document.getElementById('date-time');
   function updateDateTime() {
     const now = new Date();
@@ -192,6 +266,7 @@
   setInterval(updateDateTime, 1000);
   updateDateTime();
 
+  // Ekolayzır animasyonu
   const audio = document.getElementById('audio');
   const bars = document.querySelectorAll('.bar');
   const colors = ['#00d4ff', '#009688', '#ff5722', '#ffeb3b', '#ff4081', '#673ab7'];
@@ -223,19 +298,99 @@
   window.addEventListener('click', () => {
     if (audioCtx.state === 'suspended') {
       audioCtx.resume();
+      audio.play();
     }
   }, {once:true});
 
+  window.onload = () => {
+    audioCtx.resume().then(() => {
+      audio.play().catch(() => {});
+    });
+  };
+
   animateBars();
 
-  document.querySelectorAll('.logo-button').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const mp3 = btn.getAttribute('data-mp3');
-      audio.src = mp3;
-      audio.play();
-    });
+  // Logo müzik değiştirme
+  const aliLogo = document.getElementById('ali-logo');
+  const sezenLogo = document.getElementById('sezen-logo');
+  const linetLogo = document.getElementById('linet-logo');
+  const mslmgrssLogo = document.getElementById('mslmgrss-logo');
+  const niranunsalLogo = document.getElementById('niranunsal-logo');
+  const haktanLogo = document.getElementById('haktan-logo');
+  const yildiztilbeLogo = document.getElementById('yildiztilbe-logo');
+
+  aliLogo.addEventListener('click', () => {
+    audio.src = 'sezen.mp3';
+    audio.play();
+  });
+
+  sezenLogo.addEventListener('click', () => {
+    audio.src = 'sezenim.mp3';
+    audio.play();
+  });
+
+  linetLogo.addEventListener('click', () => {
+    audio.src = 'linet.mp3';
+    audio.play();
+  });
+
+  mslmgrssLogo.addEventListener('click', () => {
+    audio.src = 'gurses.mp3';
+    audio.play();
+  });
+
+  niranunsalLogo.addEventListener('click', () => {
+    audio.src = 'niran.mp3';
+    audio.play();
+  });
+
+  haktanLogo.addEventListener('click', () => {
+    audio.src = 'haktan.mp3';
+    audio.play();
+  });
+
+  yildiztilbeLogo.addEventListener('click', () => {
+    audio.src = 'yildiz.mp3';
+    audio.play();
+  });
+
+  // CHAT SOCKET.IO KODU
+  const socket = io('https://dashing-gilded-lyre.glitch.me');
+
+  const chatMessages = document.getElementById('chatMessages');
+  const chatInput = document.getElementById('chatInput');
+  const chatSendBtn = document.getElementById('chatSendBtn');
+
+  function addMessage(msg) {
+    const msgDiv = document.createElement('div');
+    msgDiv.textContent = msg;
+    chatMessages.appendChild(msgDiv);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+  }
+
+  chatSendBtn.addEventListener('click', () => {
+    const msg = chatInput.value.trim();
+    if (!msg) return;
+    socket.emit('chat message', msg);
+    chatInput.value = '';
+    chatInput.focus();
+  });
+
+  chatInput.addEventListener('keydown', (e) => {
+    if(e.key === 'Enter') chatSendBtn.click();
+  });
+
+  socket.on('chat message', (msg) => {
+    addMessage(msg);
+  });
+
+  socket.on('connect', () => {
+    addMessage('Sohbete bağlandınız.');
+  });
+
+  socket.on('disconnect', () => {
+    addMessage('Sohbet bağlantısı kesildi.');
   });
 </script>
-
 </body>
 </html>
