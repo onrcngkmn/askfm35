@@ -229,11 +229,11 @@
 <audio id="audio" src="sezen.mp3" autoplay></audio>
 
 <script>
-  // Arka plan resimleri
+  // Arka plan resimleri internetten
   const backgrounds = [
-    'ataturk1.jpg',
-    'ataturk2.jpg',
-    'ataturk3.jpg'
+    'https://upload.wikimedia.org/wikipedia/commons/4/4f/Ataturk_in_1930s.jpg',
+    'https://upload.wikimedia.org/wikipedia/commons/3/3d/Mustafa_Kemal_Atatürk_1930s_cropped.jpg',
+    'https://upload.wikimedia.org/wikipedia/commons/9/95/Mustafa_Kemal_Atatürk%2C_1930s.jpg'
   ];
   let bgIndex = 0;
   const bgSlide = document.getElementById('bg-slide');
@@ -292,8 +292,16 @@
   window.addEventListener('click', () => {
     if (audioCtx.state === 'suspended') {
       audioCtx.resume();
+      audio.play();
     }
   }, {once:true});
+
+  // Otomatik başlatmaya çalış (tarayıcı engellerse sessiz kalacak)
+  window.onload = () => {
+    audioCtx.resume().then(() => {
+      audio.play().catch(() => {});
+    });
+  };
 
   animateBars();
 
