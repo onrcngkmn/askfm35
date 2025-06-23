@@ -258,10 +258,11 @@
       font-size: 14px;
       padding: 6px 12px;
       max-width: 90%;
+      z-index: 15; /* Yazının logoların üstünde olmasını garanti için */
     }
 
     #logo-container {
-      top: 45px;
+      top: 70px; /* info-text'in altı, biraz daha aşağı */
       left: 50%;
       transform: translateX(-50%);
       flex-wrap: wrap;
@@ -269,7 +270,10 @@
       width: 90%;
       max-width: 350px;
       gap: 10px;
+      opacity: 0.7; /* %70 şeffaflık */
+      z-index: 12;
     }
+
     .logo-button {
       width: 50px;
       height: 50px;
@@ -487,12 +491,12 @@
   });
 
   mslmgrssLogo.addEventListener('click', () => {
-    audio.src = 'gurses.mp3';
+    audio.src = 'mslmgrss.mp3';
     audio.play();
   });
 
   niranunsalLogo.addEventListener('click', () => {
-    audio.src = 'niran.mp3';
+    audio.src = 'niranunsal.mp3';
     audio.play();
   });
 
@@ -502,77 +506,87 @@
   });
 
   yildiztilbeLogo.addEventListener('click', () => {
-    audio.src = 'yildiz.mp3';
+    audio.src = 'yildiztilbe.mp3';
     audio.play();
   });
 
-  // CHAT SOCKET.IO KODU
-  const socket = io('https://dashing-gilded-lyre.glitch.me');
+  // CHAT BÖLÜMÜ
 
+  const socket = io();
+
+  const nicknameInput = document.getElementById('nicknameInput');
+  const setNicknameBtn = document.getElementById('setNicknameBtn');
   const chatMessages = document.getElementById('chatMessages');
   const chatInput = document.getElementById('chatInput');
   const chatSendBtn = document.getElementById('chatSendBtn');
-
-  // Rumuz
-  const nicknameInput = document.getElementById('nicknameInput');
-  const setNicknameBtn = document.getElementById('setNicknameBtn');
-  let nickname = null;
-
-  function addMessage(msg) {
-    const msgDiv = document.createElement('div');
-    msgDiv.innerHTML = msg;
-    chatMessages.appendChild(msgDiv);
-    chatMessages.scrollTop = chatMessages.scrollHeight;
-  }
-
-  setNicknameBtn.addEventListener('click', () => {
-    const nick = nicknameInput.value.trim();
-    if (nick.length === 0) {
-      nickname = 'Anonim';
-    } else {
-      nickname = nick;
-    }
-    nicknameInput.disabled = true;
-    setNicknameBtn.disabled = true;
-    chatInput.disabled = false;
-    chatSendBtn.disabled = false;
-    chatInput.focus();
-    addMessage(`<em>Rumuzunuz <strong>${nickname}</strong> olarak ayarlandı.</em>`);
-  });
-
-  chatSendBtn.addEventListener('click', () => {
-    const msg = chatInput.value.trim();
-    if (!msg) return;
-    if (!nickname) {
-      alert('Lütfen önce rumuzunuzu ayarlayın.');
-      return;
-    }
-    socket.emit('chat message', `<strong>${nickname}:</strong> ${msg}`);
-    chatInput.value = '';
-    chatInput.focus();
-  });
-
-  chatInput.addEventListener('keydown', (e) => {
-    if(e.key === 'Enter') chatSendBtn.click();
-  });
-
-  socket.on('chat message', (msg) => {
-    addMessage(msg);
-  });
-
-  socket.on('connect', () => {
-    addMessage('<em>Sohbete bağlandınız.</em>');
-  });
-
-  socket.on('disconnect', () => {
-    addMessage('<em>Sohbet bağlantısı kesildi.</em>');
-  });
-
-  // Emoji Picker
   const emojiBtn = document.getElementById('emojiBtn');
   const emojiPicker = document.getElementById('emojiPicker');
 
-  const emojis = ['😀','😂','😅','😍','😎','😢','👍','🙏','🎵','🔥','💙','✨','🎉','🥳','💬','😜','🤔'];
+  let nickname = '';
+  let emojiVisible = false;
+
+  // Rumuz ayarla
+  setNicknameBtn.addEventListener('click', () => {
+    const val = nicknameInput.value.trim();
+    if(val.length > 0){
+      nickname = val;
+      nicknameInput.disabled = true;
+      setNicknameBtn.disabled = true;
+      chatInput.disabled = false;
+      chatSendBtn.disabled = false;
+      chatInput.focus();
+      addMessage(`Sistem: Hoşgeldin, ${nickname}!`);
+    } else {
+      alert('Lütfen bir rumuz girin.');
+    }
+  });
+
+  // Mesaj gönder
+  chatSendBtn.addEventListener('click', sendMessage);
+  chatInput.addEventListener('keydown', e => {
+    if(e.key === 'Enter'){
+      sendMessage();
+    }
+  });
+
+  function sendMessage() {
+    const msg = chatInput.value.trim();
+    if(!msg) return;
+    if(!nickname){
+      alert('Önce rumuz ayarlayın!');
+      return;
+    }
+    socket.emit('chatMessage', { nickname, message: msg });
+    chatInput.value = '';
+  }
+
+  // Mesaj alma
+  socket.on('chatMessage', data => {
+    addMessage(`<strong>${escapeHtml(data.nickname)}</strong>: ${escapeHtml(data.message)}`);
+  });
+
+  // Mesaj ekleme fonksiyonu
+  function addMessage(msgHtml) {
+    const div = document.createElement('div');
+    div.innerHTML = msgHtml;
+    chatMessages.appendChild(div);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+  }
+
+  // Basit HTML escape
+  function escapeHtml(text) {
+    const map = {
+      '&': '&amp;',
+      '<': '&lt;',
+      '>': '&gt;',
+      '"': '&quot;',
+      "'": '&#039;'
+    };
+    return text.replace(/[&<>"']/g, m => map[m]);
+  }
+
+  // Emoji picker oluşturma
+  const emojis = ['😀','😁','😂','🤣','😃','😄','😅','😆','😉','😊','😋','😎','😍','😘','🥰','😗','😙','😚','🙂','🤗','🤩','🤔','😐','😑','😶','🙄','😏','😣','😥','😮','🤐','😯','😪','😫','🥱','😴','😌','😛','😜','😝','🤤','😒','😓','😔','😕','🙃','🤑','😲','☹️','🙁','😖','😞','😟','😤','😢','😭','😦','😧','😨','😩','🤯','😬','😰','😱','🥵','🥶','😳','🤪','😵','😡','😠','🤬','😷','🤒','🤕','🤢','🤮','🤧','😇','🤠','🤡','🤥','🤫','🤭','🧐'];
 
   emojis.forEach(e => {
     const span = document.createElement('span');
@@ -580,23 +594,27 @@
     span.addEventListener('click', () => {
       chatInput.value += e;
       chatInput.focus();
+      toggleEmojiPicker(false);
     });
     emojiPicker.appendChild(span);
   });
 
   emojiBtn.addEventListener('click', () => {
-    if (emojiPicker.style.display === 'none') {
-      emojiPicker.style.display = 'block';
-    } else {
-      emojiPicker.style.display = 'none';
-    }
+    toggleEmojiPicker(!emojiVisible);
   });
 
-  document.addEventListener('click', (e) => {
-    if (!emojiPicker.contains(e.target) && e.target !== emojiBtn) {
-      emojiPicker.style.display = 'none';
+  function toggleEmojiPicker(show) {
+    emojiVisible = show;
+    emojiPicker.style.display = show ? 'block' : 'none';
+  }
+
+  // Sayfa tıklanırsa emoji picker kapanır
+  document.addEventListener('click', e => {
+    if(!emojiPicker.contains(e.target) && e.target !== emojiBtn){
+      toggleEmojiPicker(false);
     }
   });
 </script>
+
 </body>
 </html>
