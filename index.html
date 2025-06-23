@@ -2,7 +2,7 @@
 <html lang="tr">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
 <title>Atatürk Müzik ve Chat</title>
 <style>
   html, body {
@@ -10,18 +10,10 @@
     font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
     background: url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1920&q=80') no-repeat center center fixed;
     background-size: cover;
-    overflow: hidden;
     color: white;
+    overflow: hidden;
   }
 
-  #bg-slide {
-    position: fixed;
-    top:0; left:0; width:100%; height:100%;
-    background: transparent;
-    z-index: -3;
-  }
-
-  /* Üst orta bilgi yazısı */
   #info-text {
     position: fixed;
     top: 15px;
@@ -32,18 +24,19 @@
     border-radius: 12px;
     font-size: 16px;
     font-weight: bold;
-    z-index: 12;
+    z-index: 20;
   }
 
-  /* Sanatçı logoları - info-text altı, üst ortada yatay */
   #logo-container {
     position: fixed;
-    top: 55px; /* info-text altına */
+    top: 60px;
     left: 50%;
     transform: translateX(-50%);
     display: flex;
     gap: 15px;
-    z-index: 12;
+    z-index: 20;
+    flex-wrap: wrap;
+    justify-content: center;
   }
   .logo-button {
     width: 60px;
@@ -67,7 +60,6 @@
     pointer-events: none;
   }
 
-  /* Tarih saat sol alt */
   #date-time {
     position: fixed;
     bottom: 10px;
@@ -79,18 +71,16 @@
     padding: 6px 12px;
     border-radius: 12px;
     user-select: none;
-    z-index: 10;
+    z-index: 20;
   }
 
-  /* Sosyal logolar sağ alt */
   .social {
     position: fixed;
     bottom: 10px;
     right: 15px;
     display: flex;
-    flex-direction: row;
     gap: 20px;
-    z-index: 10;
+    z-index: 20;
   }
   .social a img {
     width: 40px;
@@ -104,7 +94,7 @@
 
   #equalizer {
     position: fixed;
-    bottom: 10px;
+    bottom: 80px;
     left: 50%;
     transform: translateX(-50%);
     width: 90%;
@@ -117,7 +107,7 @@
     background: rgba(0,0,0,0.15);
     border-radius: 20px;
     box-shadow: 0 0 25px rgba(0,212,255,0.4);
-    z-index: 9;
+    z-index: 15;
   }
   .bar {
     flex: 1;
@@ -130,22 +120,21 @@
     opacity: 0.7;
   }
 
-  /* Chat kutusu - tam ortada */
+  /* CHAT */
   #chat {
     position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 350px;
+    bottom: 10px;
+    right: 10px;
+    width: 360px;
     max-height: 500px;
-    background: rgba(0,0,0,0.6);
-    color: white;
+    background: rgba(0,0,0,0.75);
     border-radius: 15px;
+    box-shadow: 0 0 20px #00d4ffaa;
     display: flex;
     flex-direction: column;
-    z-index: 20;
     font-size: 14px;
-    box-shadow: 0 0 20px #00d4ffaa;
+    color: white;
+    z-index: 25;
   }
 
   #nicknameContainer {
@@ -156,7 +145,6 @@
     align-items: center;
     background: rgba(0,0,0,0.4);
   }
-
   #nicknameInput {
     flex: 1;
     border-radius: 12px;
@@ -186,7 +174,6 @@
     padding: 12px;
     border-bottom: 1px solid rgba(255,255,255,0.2);
   }
-
   #chatMessages div {
     margin-bottom: 8px;
     word-wrap: break-word;
@@ -198,7 +185,6 @@
     gap: 8px;
     position: relative;
   }
-
   #chatInput {
     flex: 1;
     border-radius: 12px;
@@ -207,7 +193,6 @@
     font-size: 14px;
     outline: none;
   }
-
   #chatSendBtn {
     padding: 8px 16px;
     border-radius: 12px;
@@ -218,7 +203,6 @@
     cursor: pointer;
     transition: background 0.3s ease;
   }
-
   #chatSendBtn:hover {
     background: #00b8e6;
   }
@@ -226,7 +210,7 @@
   /* Emoji Picker */
   #emojiPicker {
     display: none;
-    background: rgba(0,0,0,0.8);
+    background: rgba(0,0,0,0.85);
     padding: 10px;
     border-radius: 12px;
     max-height: 150px;
@@ -236,138 +220,69 @@
     right: 10px;
     width: 280px;
     z-index: 30;
+    user-select: none;
   }
-
   #emojiPicker span {
     font-size: 24px;
     cursor: pointer;
     margin: 5px;
-    user-select: none;
     transition: transform 0.2s ease;
   }
   #emojiPicker span:hover {
     transform: scale(1.3);
   }
 
-  /* --- MOBİL UYUMLULUK --- */
-  @media (max-width: 600px) {
-    #info-text {
-      top: 10px;
-      left: 50%;
-      transform: translateX(-50%);
-      font-size: 14px;
-      padding: 6px 12px;
-      max-width: 90%;
-      z-index: 15; /* Yazının logoların üstünde olmasını garanti için */
+  /* Responsive Mobil */
+  @media (max-width: 480px) {
+    #chat {
+      width: 95vw;
+      right: 2.5vw;
+      bottom: 10px;
+      max-height: 45vh;
     }
-
     #logo-container {
-      top: 70px; /* info-text'in altı, biraz daha aşağı */
-      left: 50%;
-      transform: translateX(-50%);
-      flex-wrap: wrap;
-      justify-content: center;
-      width: 90%;
-      max-width: 350px;
       gap: 10px;
-      opacity: 0.7; /* %70 şeffaflık */
-      z-index: 12;
     }
-
     .logo-button {
       width: 50px;
       height: 50px;
     }
-
-    #chat {
-      top: 55%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: 90vw;
-      max-width: 360px;
-      max-height: 60vh;
-      font-size: 13px;
-      box-shadow: 0 0 15px #00d4ffaa;
-    }
-
-    #nicknameContainer {
-      flex-wrap: wrap;
-      gap: 6px;
-    }
-
-    #nicknameInput {
-      font-size: 13px;
-      padding: 6px 10px;
-    }
-
-    #setNicknameBtn {
-      padding: 6px 12px;
-      font-size: 13px;
-    }
-
-    #chatInputContainer {
-      padding: 8px;
-      gap: 6px;
-    }
-
-    #chatInput {
-      font-size: 13px;
-      padding: 6px 10px;
-    }
-
-    #chatSendBtn {
-      padding: 6px 12px;
-      font-size: 13px;
-    }
-
     #equalizer {
-      display: none;
-    }
-
-    .social a img {
-      width: 30px;
-      height: 30px;
-    }
-
-    #date-time {
-      font-size: 12px;
-      padding: 4px 8px;
+      height: 70px;
+      bottom: 70px;
     }
   }
 </style>
 </head>
 <body>
 
-<div id="bg-slide"></div>
+<div id="info-text" role="banner">Dinlemek istediğin sanatçının resmine tıkla</div>
 
-<div id="info-text">Dinlemek istediğin sanatçının resmine tıkla</div>
-
-<!-- Sanatçı logoları -->
 <div id="logo-container" aria-label="Müzik Logoları">
-  <div id="ali-logo" class="logo-button" title="Ali Kınık">
+  <div id="ali-logo" class="logo-button" title="Ali Kınık" role="button" tabindex="0">
     <img src="https://raw.githubusercontent.com/onrcngkmn/askfm35/main/alikinik.jpg" alt="Ali Kınık" />
   </div>
-  <div id="sezen-logo" class="logo-button" title="Sezen Aksu">
+  <div id="sezen-logo" class="logo-button" title="Sezen Aksu" role="button" tabindex="0">
     <img src="https://raw.githubusercontent.com/onrcngkmn/askfm35/main/sezenaksu.jpg" alt="Sezen Aksu" />
   </div>
-  <div id="linet-logo" class="logo-button" title="Linet">
+  <div id="linet-logo" class="logo-button" title="Linet" role="button" tabindex="0">
     <img src="https://raw.githubusercontent.com/onrcngkmn/askfm35/main/linet.jpg" alt="Linet" />
   </div>
-  <div id="mslmgrss-logo" class="logo-button" title="Müslüm Gürses">
+  <div id="mslmgrss-logo" class="logo-button" title="Müslüm Gürses" role="button" tabindex="0">
     <img src="https://raw.githubusercontent.com/onrcngkmn/askfm35/main/mslmgrss.jpg" alt="Müslüm Gürses" />
   </div>
-  <div id="niranunsal-logo" class="logo-button" title="Niran Ünsal">
+  <div id="niranunsal-logo" class="logo-button" title="Niran Ünsal" role="button" tabindex="0">
     <img src="https://raw.githubusercontent.com/onrcngkmn/askfm35/main/niranunsal.jpg" alt="Niran Ünsal" />
   </div>
-  <div id="haktan-logo" class="logo-button" title="Haktan">
+  <div id="haktan-logo" class="logo-button" title="Haktan" role="button" tabindex="0">
     <img src="https://raw.githubusercontent.com/onrcngkmn/askfm35/main/haktan.jpg" alt="Haktan" />
   </div>
-  <div id="yildiztilbe-logo" class="logo-button" title="Yıldız Tilbe">
+  <div id="yildiztilbe-logo" class="logo-button" title="Yıldız Tilbe" role="button" tabindex="0">
     <img src="https://raw.githubusercontent.com/onrcngkmn/askfm35/main/yildiztilbe.jpg" alt="Yıldız Tilbe" />
   </div>
 </div>
 
-<div id="date-time"></div>
+<div id="date-time" role="contentinfo" aria-live="polite"></div>
 
 <div class="social" aria-label="Sosyal medya">
   <a href="https://www.facebook.com/onrcngkmn" target="_blank" rel="noopener" title="Facebook">
@@ -379,7 +294,6 @@
 </div>
 
 <div id="equalizer" aria-label="Ekolayzır">
-  <!-- 20 bar -->
   <div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>
   <div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>
   <div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>
@@ -393,7 +307,7 @@
     <button id="setNicknameBtn" aria-label="Rumuz ayarla">Ayarla</button>
   </div>
 
-  <div id="chatMessages" aria-live="polite" aria-atomic="true"></div>
+  <div id="chatMessages" aria-live="polite" aria-atomic="true" role="log"></div>
 
   <div id="chatInputContainer">
     <button id="emojiBtn" aria-label="Emoji seçici" title="Emoji ekle" style="background:none; border:none; color:white; font-size:20px; cursor:pointer;">😊</button>
@@ -466,7 +380,7 @@
 
   animateBars();
 
-  // Logo müzik değiştirme
+  // Logo müzik değiştirme (dosya isimleri önemli!)
   const aliLogo = document.getElementById('ali-logo');
   const sezenLogo = document.getElementById('sezen-logo');
   const linetLogo = document.getElementById('linet-logo');
@@ -476,12 +390,12 @@
   const yildiztilbeLogo = document.getElementById('yildiztilbe-logo');
 
   aliLogo.addEventListener('click', () => {
-    audio.src = 'sezen.mp3';
+    audio.src = 'ali.mp3';
     audio.play();
   });
 
   sezenLogo.addEventListener('click', () => {
-    audio.src = 'sezenim.mp3';
+    audio.src = 'sezen.mp3';
     audio.play();
   });
 
@@ -510,83 +424,73 @@
     audio.play();
   });
 
-  // CHAT BÖLÜMÜ
+  // CHAT SOCKET.IO KODU
+  const socket = io('https://dashing-gilded-lyre.glitch.me');
 
-  const socket = io();
-
-  const nicknameInput = document.getElementById('nicknameInput');
-  const setNicknameBtn = document.getElementById('setNicknameBtn');
   const chatMessages = document.getElementById('chatMessages');
   const chatInput = document.getElementById('chatInput');
   const chatSendBtn = document.getElementById('chatSendBtn');
-  const emojiBtn = document.getElementById('emojiBtn');
-  const emojiPicker = document.getElementById('emojiPicker');
 
-  let nickname = '';
-  let emojiVisible = false;
+  // Rumuz
+  const nicknameInput = document.getElementById('nicknameInput');
+  const setNicknameBtn = document.getElementById('setNicknameBtn');
+  let nickname = null;
 
-  // Rumuz ayarla
-  setNicknameBtn.addEventListener('click', () => {
-    const val = nicknameInput.value.trim();
-    if(val.length > 0){
-      nickname = val;
-      nicknameInput.disabled = true;
-      setNicknameBtn.disabled = true;
-      chatInput.disabled = false;
-      chatSendBtn.disabled = false;
-      chatInput.focus();
-      addMessage(`Sistem: Hoşgeldin, ${nickname}!`);
-    } else {
-      alert('Lütfen bir rumuz girin.');
-    }
-  });
-
-  // Mesaj gönder
-  chatSendBtn.addEventListener('click', sendMessage);
-  chatInput.addEventListener('keydown', e => {
-    if(e.key === 'Enter'){
-      sendMessage();
-    }
-  });
-
-  function sendMessage() {
-    const msg = chatInput.value.trim();
-    if(!msg) return;
-    if(!nickname){
-      alert('Önce rumuz ayarlayın!');
-      return;
-    }
-    socket.emit('chatMessage', { nickname, message: msg });
-    chatInput.value = '';
-  }
-
-  // Mesaj alma
-  socket.on('chatMessage', data => {
-    addMessage(`<strong>${escapeHtml(data.nickname)}</strong>: ${escapeHtml(data.message)}`);
-  });
-
-  // Mesaj ekleme fonksiyonu
-  function addMessage(msgHtml) {
-    const div = document.createElement('div');
-    div.innerHTML = msgHtml;
-    chatMessages.appendChild(div);
+  function addMessage(msg) {
+    const msgDiv = document.createElement('div');
+    msgDiv.innerHTML = msg;
+    chatMessages.appendChild(msgDiv);
     chatMessages.scrollTop = chatMessages.scrollHeight;
   }
 
-  // Basit HTML escape
-  function escapeHtml(text) {
-    const map = {
-      '&': '&amp;',
-      '<': '&lt;',
-      '>': '&gt;',
-      '"': '&quot;',
-      "'": '&#039;'
-    };
-    return text.replace(/[&<>"']/g, m => map[m]);
-  }
+  setNicknameBtn.addEventListener('click', () => {
+    const nick = nicknameInput.value.trim();
+    if (nick.length === 0) {
+      nickname = 'Anonim';
+    } else {
+      nickname = nick;
+    }
+    nicknameInput.disabled = true;
+    setNicknameBtn.disabled = true;
+    chatInput.disabled = false;
+    chatSendBtn.disabled = false;
+    chatInput.focus();
+    addMessage(`<em>Rumuzunuz <strong>${nickname}</strong> olarak ayarlandı.</em>`);
+  });
 
-  // Emoji picker oluşturma
-  const emojis = ['😀','😁','😂','🤣','😃','😄','😅','😆','😉','😊','😋','😎','😍','😘','🥰','😗','😙','😚','🙂','🤗','🤩','🤔','😐','😑','😶','🙄','😏','😣','😥','😮','🤐','😯','😪','😫','🥱','😴','😌','😛','😜','😝','🤤','😒','😓','😔','😕','🙃','🤑','😲','☹️','🙁','😖','😞','😟','😤','😢','😭','😦','😧','😨','😩','🤯','😬','😰','😱','🥵','🥶','😳','🤪','😵','😡','😠','🤬','😷','🤒','🤕','🤢','🤮','🤧','😇','🤠','🤡','🤥','🤫','🤭','🧐'];
+  chatSendBtn.addEventListener('click', () => {
+    const msg = chatInput.value.trim();
+    if (!msg) return;
+    if (!nickname) {
+      alert('Lütfen önce rumuzunuzu ayarlayın.');
+      return;
+    }
+    socket.emit('chat message', `<strong>${nickname}:</strong> ${msg}`);
+    chatInput.value = '';
+    chatInput.focus();
+  });
+
+  chatInput.addEventListener('keydown', (e) => {
+    if(e.key === 'Enter') chatSendBtn.click();
+  });
+
+  socket.on('chat message', (msg) => {
+    addMessage(msg);
+  });
+
+  socket.on('connect', () => {
+    addMessage('<em>Sohbete bağlandınız.</em>');
+  });
+
+  socket.on('disconnect', () => {
+    addMessage('<em>Sohbet bağlantısı kesildi.</em>');
+  });
+
+  // Emoji Picker
+  const emojiBtn = document.getElementById('emojiBtn');
+  const emojiPicker = document.getElementById('emojiPicker');
+
+  const emojis = ['😀','😂','😅','😍','😎','😢','👍','🙏','🎵','🔥','💙','✨','🎉','🥳','💬','😜','🤔'];
 
   emojis.forEach(e => {
     const span = document.createElement('span');
@@ -594,24 +498,18 @@
     span.addEventListener('click', () => {
       chatInput.value += e;
       chatInput.focus();
-      toggleEmojiPicker(false);
+      emojiPicker.style.display = 'none';
     });
     emojiPicker.appendChild(span);
   });
 
   emojiBtn.addEventListener('click', () => {
-    toggleEmojiPicker(!emojiVisible);
+    emojiPicker.style.display = emojiPicker.style.display === 'block' ? 'none' : 'block';
   });
 
-  function toggleEmojiPicker(show) {
-    emojiVisible = show;
-    emojiPicker.style.display = show ? 'block' : 'none';
-  }
-
-  // Sayfa tıklanırsa emoji picker kapanır
-  document.addEventListener('click', e => {
-    if(!emojiPicker.contains(e.target) && e.target !== emojiBtn){
-      toggleEmojiPicker(false);
+  document.addEventListener('click', (e) => {
+    if (!emojiPicker.contains(e.target) && e.target !== emojiBtn) {
+      emojiPicker.style.display = 'none';
     }
   });
 </script>
